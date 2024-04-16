@@ -1,0 +1,63 @@
+2024/04/16 17:10:34,369 [INFO ]  [org.springframework.boot.StartupInfoLogger] [main]- Starting DhnClientApplication using Java 1.8.0_401 on DESKTOP-LMM9TAK with PID 5884 (C:\Users\yyw\Desktop\DHN_JAVA\DHNClientKHUG\target\classes started by yyw in C:\Users\yyw\Desktop\DHN_JAVA\DHNClientKHUG)
+ -2024/04/16 17:10:34,371 [INFO ]  [org.springframework.boot.SpringApplication] [main]- No active profile set, falling back to 1 default profile: "default"
+ -2024/04/16 17:10:34,645 [WARN ]  [org.mybatis.logging.Logger] [main]- No MyBatis mapper was found in '[com.dhn.client.*.mapper.SendRequest, com.dhn.client.mapper]' package. Please check your configuration.
+ -2024/04/16 17:10:34,719 [INFO ]  [com.ulisesbocchio.jasyptspringboot.configuration.EnableEncryptablePropertiesBeanFactoryPostProcessor] [main]- Post-processing PropertySource instances
+ -2024/04/16 17:10:34,720 [INFO ]  [com.ulisesbocchio.jasyptspringboot.EncryptablePropertySourceConverter] [main]- Skipping PropertySource configurationProperties [class org.springframework.boot.context.properties.source.ConfigurationPropertySourcesPropertySource
+ -2024/04/16 17:10:34,721 [INFO ]  [com.ulisesbocchio.jasyptspringboot.EncryptablePropertySourceConverter] [main]- Converting PropertySource commandLineArgs [org.springframework.core.env.SimpleCommandLinePropertySource] to EncryptableEnumerablePropertySourceWrapper
+ -2024/04/16 17:10:34,721 [INFO ]  [com.ulisesbocchio.jasyptspringboot.EncryptablePropertySourceConverter] [main]- Converting PropertySource systemProperties [org.springframework.core.env.PropertiesPropertySource] to EncryptableMapPropertySourceWrapper
+ -2024/04/16 17:10:34,722 [INFO ]  [com.ulisesbocchio.jasyptspringboot.EncryptablePropertySourceConverter] [main]- Converting PropertySource systemEnvironment [org.springframework.boot.env.SystemEnvironmentPropertySourceEnvironmentPostProcessor$OriginAwareSystemEnvironmentPropertySource] to EncryptableSystemEnvironmentPropertySourceWrapper
+ -2024/04/16 17:10:34,722 [INFO ]  [com.ulisesbocchio.jasyptspringboot.EncryptablePropertySourceConverter] [main]- Converting PropertySource random [org.springframework.boot.env.RandomValuePropertySource] to EncryptablePropertySourceWrapper
+ -2024/04/16 17:10:34,722 [INFO ]  [com.ulisesbocchio.jasyptspringboot.EncryptablePropertySourceConverter] [main]- Converting PropertySource Config resource 'file [config\application.yml]' via location 'optional:file:./config/' [org.springframework.boot.env.OriginTrackedMapPropertySource] to EncryptableMapPropertySourceWrapper
+ -2024/04/16 17:10:34,777 [INFO ]  [com.ulisesbocchio.jasyptspringboot.filter.DefaultLazyPropertyFilter] [main]- Property Filter custom Bean not found with name 'encryptablePropertyFilter'. Initializing Default Property Filter
+ -2024/04/16 17:10:34,783 [INFO ]  [com.ulisesbocchio.jasyptspringboot.resolver.DefaultLazyPropertyResolver] [main]- Property Resolver custom Bean not found with name 'encryptablePropertyResolver'. Initializing Default Property Resolver
+ -2024/04/16 17:10:34,785 [INFO ]  [com.ulisesbocchio.jasyptspringboot.detector.DefaultLazyPropertyDetector] [main]- Property Detector custom Bean not found with name 'encryptablePropertyDetector'. Initializing Default Property Detector
+ -2024/04/16 17:10:35,024 [INFO ]  [com.zaxxer.hikari.HikariDataSource] [main]- HikariDB2 - Starting...
+ -2024/04/16 17:10:35,317 [INFO ]  [com.zaxxer.hikari.HikariDataSource] [main]- HikariDB2 - Start completed.
+ -2024/04/16 17:10:37,576 [ERROR]  [org.springframework.boot.SpringApplication] [main]- Application run failed
+ - org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://210.114.225.58:8088/get_crypto": Connection refused: connect; nested exception is java.net.ConnectException: Connection refused: connect
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:791) ~[spring-web-5.3.29.jar:5.3.29]
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:717) ~[spring-web-5.3.29.jar:5.3.29]
+	at org.springframework.web.client.RestTemplate.exchange(RestTemplate.java:608) ~[spring-web-5.3.29.jar:5.3.29]
+	at com.dhn.client.controller.KAOSendRequest.onApplicationEvent(KAOSendRequest.java:76) ~[classes/:?]
+	at com.dhn.client.controller.KAOSendRequest.onApplicationEvent(KAOSendRequest.java:1) ~[classes/:?]
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:176) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:169) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:143) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:421) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:378) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.finishRefresh(AbstractApplicationContext.java:941) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:586) ~[spring-context-5.3.29.jar:5.3.29]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.14.jar:2.7.14]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.14.jar:2.7.14]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.14.jar:2.7.14]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) ~[spring-boot-2.7.14.jar:2.7.14]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) ~[spring-boot-2.7.14.jar:2.7.14]
+	at com.dhn.client.DhnClientApplication.main(DhnClientApplication.java:12) ~[classes/:?]
+Caused by: java.net.ConnectException: Connection refused: connect
+	at java.net.DualStackPlainSocketImpl.connect0(Native Method) ~[?:1.8.0_401]
+	at java.net.DualStackPlainSocketImpl.socketConnect(DualStackPlainSocketImpl.java:75) ~[?:1.8.0_401]
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:476) ~[?:1.8.0_401]
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:218) ~[?:1.8.0_401]
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:200) ~[?:1.8.0_401]
+	at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:162) ~[?:1.8.0_401]
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:394) ~[?:1.8.0_401]
+	at java.net.Socket.connect(Socket.java:606) ~[?:1.8.0_401]
+	at java.net.Socket.connect(Socket.java:555) ~[?:1.8.0_401]
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:180) ~[?:1.8.0_401]
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:499) ~[?:1.8.0_401]
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:594) ~[?:1.8.0_401]
+	at sun.net.www.http.HttpClient.<init>(HttpClient.java:278) ~[?:1.8.0_401]
+	at sun.net.www.http.HttpClient.New(HttpClient.java:375) ~[?:1.8.0_401]
+	at sun.net.www.http.HttpClient.New(HttpClient.java:393) ~[?:1.8.0_401]
+	at sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1240) ~[?:1.8.0_401]
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1167) ~[?:1.8.0_401]
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1061) ~[?:1.8.0_401]
+	at sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:995) ~[?:1.8.0_401]
+	at org.springframework.http.client.SimpleBufferingClientHttpRequest.executeInternal(SimpleBufferingClientHttpRequest.java:76) ~[spring-web-5.3.29.jar:5.3.29]
+	at org.springframework.http.client.AbstractBufferingClientHttpRequest.executeInternal(AbstractBufferingClientHttpRequest.java:48) ~[spring-web-5.3.29.jar:5.3.29]
+	at org.springframework.http.client.AbstractClientHttpRequest.execute(AbstractClientHttpRequest.java:66) ~[spring-web-5.3.29.jar:5.3.29]
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:782) ~[spring-web-5.3.29.jar:5.3.29]
+	... 17 more
+2024/04/16 17:10:37,581 [INFO ]  [com.zaxxer.hikari.HikariDataSource] [main]- HikariDB2 - Shutdown initiated...
+ -2024/04/16 17:10:37,582 [INFO ]  [com.zaxxer.hikari.HikariDataSource] [main]- HikariDB2 - Shutdown completed.
+ -

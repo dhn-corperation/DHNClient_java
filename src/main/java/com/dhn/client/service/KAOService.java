@@ -1,0 +1,125 @@
+package com.dhn.client.service;
+
+import java.security.SecureRandom;
+import java.util.Base64;
+
+import javax.crypto.spec.GCMParameterSpec;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.dhn.client.AES256_GCM;
+import com.dhn.client.bean.ButtonJsonBean;
+import com.dhn.client.bean.KAORequestBean;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class KAOService {
+	
+	@Autowired
+	private AES256_GCM aes256;
+	
+	public KAORequestBean encryption(KAORequestBean kaoRequestBean, String column) {
+		GCMParameterSpec nonce = generateGCMParameterSpec();
+		//String noncestd = Base64.getEncoder().encodeToString(nonce.getIV());
+		String nonceHex = aes256.toHex(nonce.getIV());
+		kaoRequestBean.setCrypto(nonceHex+","+column);
+		try {
+			kaoRequestBean.setPhn(aes256.encrypt(kaoRequestBean.getPhn(), nonce));
+			if(column.contains("MSG")) {
+				kaoRequestBean.setMsg(aes256.encrypt(kaoRequestBean.getMsg(), nonce));
+			}
+			if(column.contains("PROFILE")) {
+				kaoRequestBean.setProfile(aes256.encrypt(kaoRequestBean.getProfile(), nonce));
+			}
+			if (column.contains("BUTTON")) {
+				kaoRequestBean.setButton1(aes256.encrypt(kaoRequestBean.getButton1(), nonce));
+				kaoRequestBean.setButton2(aes256.encrypt(kaoRequestBean.getButton2(), nonce));
+				kaoRequestBean.setButton3(aes256.encrypt(kaoRequestBean.getButton3(), nonce));
+				kaoRequestBean.setButton4(aes256.encrypt(kaoRequestBean.getButton4(), nonce));
+				kaoRequestBean.setButton5(aes256.encrypt(kaoRequestBean.getButton5(), nonce));
+			}
+			if(column.contains("MESSAGETYPE")) {
+				kaoRequestBean.setMessagetype(aes256.encrypt(kaoRequestBean.getMessagetype(), nonce));
+			}
+			if(column.contains("MSGSMS")) {
+				kaoRequestBean.setMsgsms(aes256.encrypt(kaoRequestBean.getMsgsms(), nonce));
+			}
+			if(column.contains("SMSSENDER")) {
+				kaoRequestBean.setSmssender(aes256.encrypt(kaoRequestBean.getSmssender(), nonce));
+			}
+			if(column.contains("TMPLID")) {
+				kaoRequestBean.setTmplid(aes256.encrypt(kaoRequestBean.getTmplid(), nonce));
+			}
+		}catch (Exception e) {
+			log.info("데이터 암호화 오류 : ",e.getMessage());
+		}
+		return kaoRequestBean;
+	}
+
+	public KAORequestBean Btn_form(KAORequestBean kaoRequestBean) {
+
+		String[] buttons = kaoRequestBean.getButton1().split("&");
+
+		if (buttons.length > 0) {
+			kaoRequestBean.setButton1(Btn_json(buttons[0]));
+		}
+		if (buttons.length > 1) {
+			kaoRequestBean.setButton2(Btn_json(buttons[1]));
+		}
+		if (buttons.length > 2) {
+			kaoRequestBean.setButton3(Btn_json(buttons[2]));
+		}
+		if (buttons.length > 3) {
+			kaoRequestBean.setButton4(Btn_json(buttons[3]));
+		}
+		if (buttons.length > 4) {
+			kaoRequestBean.setButton5(Btn_json(buttons[4]));
+		}
+
+		return kaoRequestBean;
+
+	}
+
+	private String Btn_json(String btn) {
+
+		String[] buttons = btn.split("\\^");
+
+		ButtonJsonBean btnjb = new ButtonJsonBean();
+		btnjb.setName(buttons[0]);
+		btnjb.setType(buttons[1]);
+		btnjb.setUrl_pc(buttons[2]);
+		btnjb.setUrl_mobile(buttons[3]);
+
+		String jsonString = "";
+
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			jsonString = mapper.writeValueAsString(btnjb);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return jsonString;
+	}
+	
+	 public GCMParameterSpec generateGCMParameterSpec() {
+	        byte[] iv = new byte[12]; // 12바이트 nonce
+	        new SecureRandom().nextBytes(iv);
+	        return new GCMParameterSpec(128, iv);
+	   }
+
+	 /*
+	  	 private GCMParameterSpec generateGCMParameterSpec() {
+	        byte[] nonce = new byte[12]; // 12바이트 nonce
+	        SecureRandom random = new SecureRandom();
+	        random.nextBytes(nonce);
+	        return new GCMParameterSpec(128, nonce);
+	 }
+	  */
+}

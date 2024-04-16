@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dhn.client.kakao.mapper.SendRequest">
+	
+	<select id="req_kao_count" parameterType = "com.dhn.client.bean.SQLParameter" resultType = "int">
+		select count(1) as cnt
+			from ${msg_table}
+		where MSG_SNDG_STTS_CD = '0'
+			and COALESCE(RSRT_DDTI,CURRENT TIMESTAMP) &lt;= CURRENT TIMESTAMP
+			and SNDG_DDTI is null
+			and MSG_DCD = '${msg_type}'
+			and BIZ_MSG_DCD = 'AT'
+			and GROUP_NO is null
+	</select>
+	
+	<update id="req_kao_group_update" parameterType = "com.dhn.client.bean.SQLParameter" >
+		update ${msg_table} 
+			set MSG_SNDG_STTS_CD = '1',
+				GROUP_NO = '${group_no}'
+		where MSG_SNDG_STTS_CD = '0'
+			and COALESCE(RSRT_DDTI,CURRENT TIMESTAMP) &lt;= CURRENT TIMESTAMP
+			and SNDG_DDTI is null
+			and MSG_DCD = '${msg_type}'
+			and BIZ_MSG_DCD = 'AT'
+			and GROUP_NO is null
+		fetch first 1000 rows only
+	</update>
+	
+	<resultMap id="RequestTable" type="com.dhn.client.bean.KAORequestBean">
+		<result column="DATA_ID" property="msgid"/>
+		<result column="message_type" property="messagetype"/>
+		<result column="msg_txt" property="msg"/>
+		<result column="sms_txt" property="msgsms"/>
+		<result column="call_to" property="phn"/>
+		<result column="call_from" property="smssender"/>
+		<result column="pcom" property="pcom"/>
+		<result column="userdata" property="pinvoice"/>
+		<result column="smskind" property="smskind"/>
+		<result column="msg_txt_title" property="smslmstit"/>
+		<result column="curr_date" property="regdt"/>
+		<result column="btn_1" property="button1"/>
+		<result column="btn_2" property="button2"/>
+		<result column="btn_3" property="button3"/>
+		<result column="btn_4" property="button4"/>
+		<result column="btn_5" property="button5"/>
+		<result column="template_cd" property="tmplid"/>
+		<result column="profile_key" property="profile"/> 
+		<result column="snd_dttm" property="reservedt"/>
+	</resultMap>
+	
+	<select id="req_kao_select" parameterType = "com.dhn.client.bean.SQLParameter" resultMap = "RequestTable">
+		select 
+			trim(DATA_ID) as DATA_ID,
+			trim(case 
+			    when BIZ_MSG_DCD is null or BIZ_MSG_DCD = '' then 'PH'
+			    else BIZ_MSG_DCD
+			end) as message_type,
+			CHTR_MSG_CNTS as msg_txt,
+			CHTR_MSG_CNTS as sms_txt,
+			trim((case 
+				when RCPT_TEL like '82%' then RCPT_TEL
+				when RCPT_TEL like '010%' then '82' || substr(rcpt_tel, 2, 15)  
+					else '82' || substr(rcpt_tel, 2, 15)  
+			end))  as call_to,
+			trim(TRNS_PR_TEL) as call_from,
+			CHTR_MSG_TITL as msg_txt_title,
+			'D' as pcom,
+			CASE
+		        WHEN CHARACTER_LENGTH(CHTR_MSG_CNTS) >= 90 THEN 'L'
+		        ELSE 'S'
+		    END AS smskind,
+			VARCHAR_FORMAT(current timestamp, 'yyyy-mm-dd hh24:mi:ss') as curr_date,
+			BUTN_INFO as btn_1,
+			TMPL_CD_CNTS as template_cd,
+			trim(SEND_PR_PROF) as profile_key,
+			COALESCE(VARCHAR_FORMAT(RSRT_DDTI, 'yyyymmddhh24miss'), '00000000000000') as snd_dttm
+		from ${msg_table}
+			where MSG_SNDG_STTS_CD = '1'
+				and GROUP_NO = '${group_no}'
+				and MSG_DCD = '${msg_type}'
+	</select>
+	
+	<update id="req_sent_complete" parameterType = "com.dhn.client.bean.SQLParameter" >
+		update ${msg_table} 
+			set MSG_SNDG_STTS_CD = '2',
+			SNDG_DDTI = CURRENT TIMESTAMP
+		where MSG_SNDG_STTS_CD = '1' 
+			and GROUP_NO = '${group_no}'
+			and MSG_DCD = '${msg_type}'
+	</update>
+	
+	<update id="req_sent_init" parameterType = "com.dhn.client.bean.SQLParameter" >
+		update ${msg_table}
+			set MSG_SNDG_STTS_CD = '0',
+			GROUP_NO = NULL,
+			SNDG_DDTI = NULL
+		where MSG_SNDG_STTS_CD = '1'
+			and GROUP_NO = '${group_no}'
+			and MSG_DCD = '${msg_type}'
+	</update>
+	
+	<update id="result_log_insert1" parameterType="com.dhn.client.bean.Msg_Log">
+		update ${msg_table} 
+		   set MSG_SNDG_STTS_CD = '${status}',
+		      MSG_ERR_CD = '${msg_err_code}',
+		      AGAN_TEL_INFO_CD = '${agan_tel_info}',
+		      SNDG_CPEE_DDTI = TIMESTAMP('${sndg_cpee_dt}'),
+		      AGAN_CTDO_TYPE = '${agan_sms_type}'
+		 where DATA_ID = '${msgid}'
+	</update>
+	
+	<insert id="result_log_insert2" parameterType="com.dhn.client.bean.Msg_Log">
+		insert into ${log_table} select * from ${msg_table} where DATA_ID = '${msgid}'
+	</insert>
+	
+	<update id="result_log_insert3" parameterType="com.dhn.client.bean.Msg_Log">
+		update ${log_table} 
+		   set MSG_SNDG_STTS_CD = '${end_status}'
+		 where DATA_ID = '${msgid}'
+	</update>
+	
+	<delete id="result_log_insert4" parameterType="com.dhn.client.bean.Msg_Log">
+		delete from ${msg_table} where DATA_ID = '${msgid}'
+	</delete>
+	
+</mapper>  
