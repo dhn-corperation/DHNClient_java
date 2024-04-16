@@ -33,5 +33,5 @@ build/
 .vscode/
 
 ### log & config
-/log
+/logs
 /config
