@@ -1,8 +1,5 @@
 package com.dhn.client.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.dhn.client.bean.Msg_Log;
-import com.dhn.client.bean.SQLParameter;
 import com.dhn.client.service.RequestService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -109,9 +105,6 @@ public class ResultReq implements ApplicationListener<ContextRefreshedEvent>{
 			_ml.setMsgid(ent.getString("msgid"));
 			
 			String rscode = "";
-			
-			String res_dt = "";
-			
 			
 			_ml.setMsg_type(ent.getString("message_type").toUpperCase());
 			
