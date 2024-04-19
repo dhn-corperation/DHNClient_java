@@ -207,13 +207,7 @@
 		insert into ${log_table} select * from ${msg_table} where DATA_ID = '${msgid}'
 	</insert>
 	
-	<update id="result_log_insert3" parameterType="com.dhn.client.bean.Msg_Log">
-		update ${log_table} 
-		   set MSG_SNDG_STTS_CD = '${end_status}'
-		 where DATA_ID = '${msgid}'
-	</update>
-	
-	<delete id="result_log_insert4" parameterType="com.dhn.client.bean.Msg_Log">
+	<delete id="result_log_insert3" parameterType="com.dhn.client.bean.Msg_Log">
 		delete from ${msg_table} where DATA_ID = '${msgid}'
 	</delete>
 				

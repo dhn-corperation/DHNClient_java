@@ -68,7 +68,8 @@ public class SMSSendRequest implements ApplicationListener<ContextRefreshedEvent
 		ResponseEntity<String> cresponse = crt.exchange( dhnServer + "get_crypto",HttpMethod.GET, centity, String.class );
 		
 		if(cresponse.getStatusCode()==HttpStatus.OK) {
-			crypto = cresponse.getBody().toString();
+			crypto = cresponse.getBody()!=null? cresponse.getBody().toString():"";
+			log.info("SMS 초기화 완료");
 			isStart = true;
 		}else {
 			log.info("암호화 컬럼 가져오기 오류 ");			
@@ -82,7 +83,7 @@ public class SMSSendRequest implements ApplicationListener<ContextRefreshedEvent
 			
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
 			LocalDateTime now = LocalDateTime.now();
-			String group_no = now.format(formatter);
+			String group_no = "S" + now.format(formatter);
 			
 			if(!group_no.equals(preGroupNo)) {
 				try {

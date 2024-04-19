@@ -31,10 +31,10 @@ public class ResultReq implements ApplicationListener<ContextRefreshedEvent>{
 	
 	public static boolean isStart = false;
 	private boolean isProc = false;
-	private SQLParameter param = new SQLParameter();
+	//private SQLParameter param = new SQLParameter();
 	private String dhnServer;
 	private String userid;
-	private Map<String, String> _rsltCode = new HashMap<String, String>();
+	//private Map<String, String> _rsltCode = new HashMap<String, String>();
 	private static int procCnt = 0;
 	private String msgTable = "";
 	private String logTable = "";
@@ -107,38 +107,61 @@ public class ResultReq implements ApplicationListener<ContextRefreshedEvent>{
 			
 			Msg_Log _ml = new Msg_Log(msgTable, logTable);
 			_ml.setMsgid(ent.getString("msgid"));
-			_ml.setStatus("5");
-			_ml.setSndg_cpee_dt(ent.getString("remark2"));
 			
-			if(ent.getString("code").equals("0000")) {
-				_ml.setEnd_status("2");				
-			}else {
-				_ml.setEnd_status("4");								
-			}
+			String rscode = "";
+			
+			String res_dt = "";
+			
+			
 			_ml.setMsg_type(ent.getString("message_type").toUpperCase());
 			
-			if(ent.getString("message_type").equalsIgnoreCase("AT") && ent.getString("s_code") != null && ent.getString("sms_kind") != null){
-				// 2차 문자 발송시 코드값
-				_ml.setMsg_err_code(ent.getString("s_code")); // 카톡 결과값
-				_ml.setAgan_code(ent.getString("code")); // 문자 결과값
-				_ml.setAgan_sms_type(ent.getString("sms_kind")); // 재발송된 문자 타입
+			if(ent.getString("message_type").equalsIgnoreCase("AT")) { // message_type = AT 즉, 1차 알림톡 성공
+				_ml.setMsg_err_code(ent.getString("code")); // 알림톡 코드
+				rscode = "K"; // 재발송된 문자 결과값 (K : 알림톡 성공)
+				_ml.setSndg_cpee_dt(ent.getString("res_dt")); // 단말기 수신 시각 (알림톡이 성공하면 remark2가 없어 Center에서 AT테이블에 넣는 시각)
 				
-				if(ent.getString("remark1").equalsIgnoreCase("SKT")) {// 재발송된 문자 통신사값
-					_ml.setAgan_tel_info("1");
-				}else if(ent.getString("remark1").equalsIgnoreCase("KTF")) {
-					_ml.setAgan_tel_info("2");
-				}else if(ent.getString("remark1").equalsIgnoreCase("LGT")) {
-					_ml.setAgan_tel_info("3");
-				}else if(ent.getString("remark1").equalsIgnoreCase("ETC")) {
-					_ml.setAgan_tel_info("4");
+				if(ent.getString("code").equals("0000")) { // 알림톡 성공 여부
+					_ml.setStatus("2");		
+				}else {
+					_ml.setStatus("4");							
 				}
-			}else if(ent.getString("message_type").equalsIgnoreCase("PH")){
-				_ml.setMsg_err_code(ent.getString("code"));
-				_ml.setAgan_sms_type(ent.getString("sms_kind"));
-			}else {
-				_ml.setMsg_err_code(ent.getString("code"));
+			}else { // message_type = PH
+				if (ent.has("s_code") && !ent.isNull("s_code") && ent.getString("s_code").length() > 1){// 알림톡 실패 -> 문자처리
+					_ml.setMsg_err_code(ent.getString("s_code")); // 알림톡 실패 코드
+					rscode = ent.getString("code").substring(2); // 문자 코드
+					_ml.setAgan_sms_type(ent.getString("sms_kind")); // 재발송된 문자 타입
+					
+					if(ent.getString("remark1").equalsIgnoreCase("SKT")) {// 재발송된 문자 통신사값
+						_ml.setAgan_tel_info("1");
+					}else if(ent.getString("remark1").equalsIgnoreCase("KTF")) {
+						_ml.setAgan_tel_info("2");
+					}else if(ent.getString("remark1").equalsIgnoreCase("LGT")) {
+						_ml.setAgan_tel_info("3");
+					}else if(ent.getString("remark1").equalsIgnoreCase("ETC")) {
+						_ml.setAgan_tel_info("4");
+					}
+					
+					if(ent.getString("code").equals("0000")) { // 문자 성공 여부
+						_ml.setStatus("2");		
+					}else {
+						_ml.setStatus("4");							
+					}
+					_ml.setSndg_cpee_dt(ent.getString("remark2")); // 단말기 수신 시각
+					
+				}else { // 일반 문자
+					_ml.setMsg_err_code(ent.getString("code").substring(2)); // 문자 코드
+					_ml.setAgan_sms_type(ent.getString("sms_kind")); // 문자 타입
+					if(ent.getString("code").equals("0000")) {
+						_ml.setStatus("2");		
+					}else {
+						_ml.setStatus("4");							
+					}
+					_ml.setSndg_cpee_dt(ent.getString("remark2")); // 단말기 수신 시각
+				}
 			}
-			log.info(_ml.toString());
+			
+			_ml.setAgan_code(rscode);
+			
 			
 			try {
 				reqService.Insert_msg_log(_ml);

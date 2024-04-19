@@ -25,7 +25,6 @@ import com.dhn.client.bean.KAORequestBean;
 import com.dhn.client.bean.SQLParameter;
 import com.dhn.client.service.KAOService;
 import com.dhn.client.service.RequestService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -79,12 +78,9 @@ public class KAOSendRequest implements ApplicationListener<ContextRefreshedEvent
 			log.info("암호화 컬럼 가져오기 오류 ");
 		}
 		
-		
-		
-		log.info("초기화 완료 됨. - " + param.getKakao());
-		
 		if (param.getKakao() != null && param.getKakao().toUpperCase().equals("Y") && cresponse.getStatusCode() == HttpStatus.OK) {
-			crypto = cresponse.getBody().toString();
+			crypto = cresponse.getBody()!=null? cresponse.getBody().toString():"";
+			log.info("KAO 초기화 완료");
 			isStart = true;
 		} else {
 			posts.postProcessBeforeDestruction(this, null);
@@ -97,7 +93,7 @@ public class KAOSendRequest implements ApplicationListener<ContextRefreshedEvent
 		if(isStart && !isProc) {
 			isProc = true;
 			
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
 			LocalDateTime now = LocalDateTime.now();
 			String group_no = now.format(formatter);
 			
@@ -121,13 +117,12 @@ public class KAOSendRequest implements ApplicationListener<ContextRefreshedEvent
 
 						List<KAORequestBean> _list = reqService.selectKAORequests(param);
 
+
 						for (KAORequestBean kaoRequestBean : _list) {
 							if (kaoRequestBean.getButton1() != null) {
 								kaoRequestBean = kaoService.Btn_form(kaoRequestBean);
 							}
-
 							kaoRequestBean = kaoService.encryption(kaoRequestBean, crypto);
-
 						}
 
 						StringWriter sw = new StringWriter();
@@ -144,8 +139,7 @@ public class KAOSendRequest implements ApplicationListener<ContextRefreshedEvent
 
 						try {
 							ResponseEntity<String> response = rt.postForEntity(dhnServer + "req", entity, String.class);
-							// ResponseEntity<String> response = rt.postForEntity(dhnServer + "testyyw",
-							// entity, String.class);
+							//ResponseEntity<String> response = rt.postForEntity(dhnServer + "testyyw",entity, String.class);
 
 							if (response.getStatusCode() == HttpStatus.OK) {
 								reqService.updateKAOSendComplete(param);

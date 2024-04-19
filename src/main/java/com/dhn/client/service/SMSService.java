@@ -26,21 +26,24 @@ public class SMSService {
 		String nonceHex = aes256.toHex(nonce.getIV());
 		requestBean.setCrypto(nonceHex+","+column);
 		try {
-			requestBean.setPhn(aes256.encrypt(requestBean.getPhn(), nonce));
-			if(column.contains("MSG")) {
+			
+			if (requestBean.getPhn() != null && !requestBean.getPhn().isEmpty()) {
+				requestBean.setPhn(aes256.encrypt(requestBean.getPhn(), nonce));
+			}
+			if(column.contains("MSG") && requestBean.getMsg() != null && !requestBean.getMsg().isEmpty()) {
 				requestBean.setMsg(aes256.encrypt(requestBean.getMsg(), nonce));
 			}
-			if(column.contains("PROFILE")) {
-				requestBean.setProfile(aes256.encrypt(requestBean.getProfile(), nonce));
-			}
-			if(column.contains("MESSAGETYPE")) {
+			if(column.contains("MESSAGETYPE") && requestBean.getMessagetype() != null && !requestBean.getMessagetype().isEmpty()) {
 				requestBean.setMessagetype(aes256.encrypt(requestBean.getMessagetype(), nonce));
 			}
-			if(column.contains("MSGSMS")) {
+			if(column.contains("MSGSMS") && requestBean.getMsgsms() != null && !requestBean.getMsgsms().isEmpty()) {
 				requestBean.setMsgsms(aes256.encrypt(requestBean.getMsgsms(), nonce));
 			}
-			if(column.contains("SMSSENDER")) {
+			if(column.contains("SMSSENDER") && requestBean.getSmssender() != null && !requestBean.getSmssender().isEmpty()) {
 				requestBean.setSmssender(aes256.encrypt(requestBean.getSmssender(), nonce));
+			}
+			if(column.contains("SMSLMSTIT") && requestBean.getSmslmstit() != null && !requestBean.getSmslmstit().isEmpty()) {
+				requestBean.setSmslmstit(aes256.encrypt(requestBean.getSmslmstit(), nonce));
 			}
 		}catch (Exception e) {
 			log.info("데이터 암호화 오류 : ",e.getMessage());

@@ -29,31 +29,48 @@ public class KAOService {
 		String nonceHex = aes256.toHex(nonce.getIV());
 		kaoRequestBean.setCrypto(nonceHex+","+column);
 		try {
-			kaoRequestBean.setPhn(aes256.encrypt(kaoRequestBean.getPhn(), nonce));
-			if(column.contains("MSG")) {
+			
+			if(kaoRequestBean.getPhn() != null && !kaoRequestBean.getPhn().isEmpty()) {			
+				kaoRequestBean.setPhn(aes256.encrypt(kaoRequestBean.getPhn(), nonce));
+			}
+			if(column.contains("MSG") && kaoRequestBean.getMsg() != null && !kaoRequestBean.getMsg().isEmpty()) {
 				kaoRequestBean.setMsg(aes256.encrypt(kaoRequestBean.getMsg(), nonce));
 			}
-			if(column.contains("PROFILE")) {
+			if(column.contains("PROFILE") && kaoRequestBean.getProfile() != null && !kaoRequestBean.getProfile().isEmpty()) {
 				kaoRequestBean.setProfile(aes256.encrypt(kaoRequestBean.getProfile(), nonce));
 			}
 			if (column.contains("BUTTON")) {
-				kaoRequestBean.setButton1(aes256.encrypt(kaoRequestBean.getButton1(), nonce));
-				kaoRequestBean.setButton2(aes256.encrypt(kaoRequestBean.getButton2(), nonce));
-				kaoRequestBean.setButton3(aes256.encrypt(kaoRequestBean.getButton3(), nonce));
-				kaoRequestBean.setButton4(aes256.encrypt(kaoRequestBean.getButton4(), nonce));
-				kaoRequestBean.setButton5(aes256.encrypt(kaoRequestBean.getButton5(), nonce));
+				
+				if(kaoRequestBean.getButton1() != null && !kaoRequestBean.getButton1().isEmpty()) {
+					kaoRequestBean.setButton1(aes256.encrypt(kaoRequestBean.getButton1(), nonce));
+				}
+				if(kaoRequestBean.getButton2() != null && !kaoRequestBean.getButton2().isEmpty()) {
+					kaoRequestBean.setButton2(aes256.encrypt(kaoRequestBean.getButton2(), nonce));					
+				}
+				if(kaoRequestBean.getButton3() != null && !kaoRequestBean.getButton3().isEmpty()) {
+					kaoRequestBean.setButton3(aes256.encrypt(kaoRequestBean.getButton3(), nonce));					
+				}
+				if(kaoRequestBean.getButton4() != null && !kaoRequestBean.getButton4().isEmpty()) {
+					kaoRequestBean.setButton4(aes256.encrypt(kaoRequestBean.getButton4(), nonce));					
+				}
+				if(kaoRequestBean.getButton5() != null && !kaoRequestBean.getButton5().isEmpty()) {
+					kaoRequestBean.setButton5(aes256.encrypt(kaoRequestBean.getButton5(), nonce));					
+				}
 			}
-			if(column.contains("MESSAGETYPE")) {
+			if(column.contains("MESSAGETYPE") && kaoRequestBean.getMessagetype() != null && !kaoRequestBean.getMessagetype().isEmpty()) {
 				kaoRequestBean.setMessagetype(aes256.encrypt(kaoRequestBean.getMessagetype(), nonce));
 			}
-			if(column.contains("MSGSMS")) {
+			if(column.contains("MSGSMS") && kaoRequestBean.getMsgsms() != null && !kaoRequestBean.getMsgsms().isEmpty()) {
 				kaoRequestBean.setMsgsms(aes256.encrypt(kaoRequestBean.getMsgsms(), nonce));
 			}
-			if(column.contains("SMSSENDER")) {
+			if(column.contains("SMSSENDER") && kaoRequestBean.getSmssender() != null && !kaoRequestBean.getSmssender().isEmpty()) {
 				kaoRequestBean.setSmssender(aes256.encrypt(kaoRequestBean.getSmssender(), nonce));
 			}
-			if(column.contains("TMPLID")) {
+			if(column.contains("TMPLID") && kaoRequestBean.getTmplid() != null && !kaoRequestBean.getTmplid().isEmpty()) {
 				kaoRequestBean.setTmplid(aes256.encrypt(kaoRequestBean.getTmplid(), nonce));
+			}
+			if(column.contains("SMSLMSTIT") && kaoRequestBean.getSmslmstit() != null && !kaoRequestBean.getSmslmstit().isEmpty()) {
+				kaoRequestBean.setSmslmstit(aes256.encrypt(kaoRequestBean.getSmslmstit(), nonce));
 			}
 		}catch (Exception e) {
 			log.info("데이터 암호화 오류 : ",e.getMessage());
@@ -92,8 +109,8 @@ public class KAOService {
 		ButtonJsonBean btnjb = new ButtonJsonBean();
 		btnjb.setName(buttons[0]);
 		btnjb.setType(buttons[1]);
-		btnjb.setUrl_pc(buttons[2]);
-		btnjb.setUrl_mobile(buttons[3]);
+		btnjb.setUrl_mobile(buttons[2]);
+		btnjb.setUrl_pc(buttons[3]);
 
 		String jsonString = "";
 
@@ -113,13 +130,4 @@ public class KAOService {
 	        new SecureRandom().nextBytes(iv);
 	        return new GCMParameterSpec(128, iv);
 	   }
-
-	 /*
-	  	 private GCMParameterSpec generateGCMParameterSpec() {
-	        byte[] nonce = new byte[12]; // 12바이트 nonce
-	        SecureRandom random = new SecureRandom();
-	        random.nextBytes(nonce);
-	        return new GCMParameterSpec(128, nonce);
-	 }
-	  */
 }
