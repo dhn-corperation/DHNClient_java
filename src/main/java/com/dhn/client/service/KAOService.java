@@ -80,7 +80,7 @@ public class KAOService {
 
 	public KAORequestBean Btn_form(KAORequestBean kaoRequestBean) {
 
-		String[] buttons = kaoRequestBean.getButton1().split("&");
+		String[] buttons = kaoRequestBean.getButton1().split("\\|");
 
 		if (buttons.length > 0) {
 			kaoRequestBean.setButton1(Btn_json(buttons[0]));
