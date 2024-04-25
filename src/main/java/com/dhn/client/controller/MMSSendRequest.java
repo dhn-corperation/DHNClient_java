@@ -114,7 +114,6 @@ public class MMSSendRequest implements ApplicationListener<ContextRefreshedEvent
 						
 						for (RequestBean requestBean : _list) {
 							requestBean = smsService.encryption(requestBean,crypto);
-							log.info(requestBean.toString());
 						}
 						
 						StringWriter sw = new StringWriter();
@@ -136,14 +135,14 @@ public class MMSSendRequest implements ApplicationListener<ContextRefreshedEvent
 							if(response.getStatusCode() == HttpStatus.OK)
 							{
 								reqService.updateSMSSendComplete(param);
-								log.info("메세지 전송 완료 : " + group_no + " / " + _list.size() + " 건");
+								log.info("MMS 메세지 전송 완료 : " + group_no + " / " + _list.size() + " 건");
 							} else {
 								Map<String, String> res = om.readValue(response.getBody().toString(), Map.class);
-								log.info("메세지 전송오류 : " + res.get("message"));
+								log.info("MMS 메세지 전송오류 : " + res.get("message"));
 								reqService.updateSMSSendInit(param);
 							}
 						} catch(Exception ex) {
-							log.info("메세지 전송 오류 : " + ex.toString());
+							log.info("MMS 메세지 전송 오류 : " + ex.toString());
 							
 							reqService.updateSMSSendInit(param);
 						}
@@ -208,7 +207,6 @@ public class MMSSendRequest implements ApplicationListener<ContextRefreshedEvent
 							OkHttpClient client = new OkHttpClient();
 							Response response = client.newCall(request).execute();
 							
-							log.info(""+response.code());
 							if(response.code() == 200) {
 								ObjectMapper mapper = new ObjectMapper();
 								Map<String, String> res = mapper.readValue(response.body().string(), Map.class);

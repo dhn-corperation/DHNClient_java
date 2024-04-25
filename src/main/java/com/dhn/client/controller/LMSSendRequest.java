@@ -102,7 +102,6 @@ public class LMSSendRequest implements ApplicationListener<ContextRefreshedEvent
 						
 						for (RequestBean requestBean : _list) {
 							requestBean = smsService.encryption(requestBean,crypto);
-							log.info(requestBean.toString());
 						}
 						
 						StringWriter sw = new StringWriter();
