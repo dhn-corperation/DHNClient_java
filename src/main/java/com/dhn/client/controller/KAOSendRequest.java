@@ -142,14 +142,14 @@ public class KAOSendRequest implements ApplicationListener<ContextRefreshedEvent
 
 							if (response.getStatusCode() == HttpStatus.OK) {
 								reqService.updateKAOSendComplete(param);
-								log.info("메세지 전송 완료 : " + group_no + " / " + _list.size() + " 건");
+								log.info("KAO 메세지 전송 완료 : " + group_no + " / " + _list.size() + " 건");
 							} else {
 								Map<String, String> res = om.readValue(response.getBody().toString(), Map.class);
-								log.info("메세지 전송오류 : " + res.get("message"));
+								log.info("KAO 메세지 전송오류 : " + res.get("message"));
 								reqService.updateKAOSendInit(param);
 							}
 						} catch (Exception e) {
-							log.info("메세지 전송 오류 : " + e.toString());
+							log.info("KAO 메세지 전송 오류 : " + e.toString());
 							reqService.updateKAOSendInit(param);
 						}
 
