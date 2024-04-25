@@ -70,11 +70,11 @@
 		        WHEN CHARACTER_LENGTH(CHTR_MSG_CNTS) >= 90 THEN 'L'
 		        ELSE 'S'
 		    END AS smskind,
-			VARCHAR_FORMAT(current timestamp, 'yyyy-mm-dd hh24:mi:ss') as curr_date,
+			TO_CHAR(current timestamp, 'yyyy-mm-dd hh24:mi:ss') as curr_date,
 			BUTN_INFO as btn_1,
 			TMPL_CD_CNTS as template_cd,
 			trim(SEND_PR_PROF) as profile_key,
-			COALESCE(VARCHAR_FORMAT(RSRT_DDTI, 'yyyymmddhh24miss'), '00000000000000') as snd_dttm
+			COALESCE(TO_CHAR(RSRT_DDTI, 'yyyymmddhh24miss'), '00000000000000') as snd_dttm
 		from ${msg_table}
 			where MSG_SNDG_STTS_CD = '1'
 				and GROUP_NO = '${group_no}'
