@@ -67,7 +67,7 @@ public class MMSSendRequest implements ApplicationListener<ContextRefreshedEvent
 		userid = appContext.getEnvironment().getProperty("dhnclient.userid");
 		
 		// 풀 경로를 DB에 담는듯.
-		//basepath = appContext.getEnvironment().getProperty("dhnclient.file_base_path");
+		basepath = appContext.getEnvironment().getProperty("dhnclient.file_base_path")==null?"":appContext.getEnvironment().getProperty("dhnclient.file_base_path");
 		
 		
 		HttpHeaders cheader = new HttpHeaders();
@@ -176,20 +176,17 @@ public class MMSSendRequest implements ApplicationListener<ContextRefreshedEvent
 						MultipartBody.Builder builder = new MultipartBody.Builder();
 						builder.addFormDataPart("userid", userid);
 						if(mmsImageBean.getFile1() != null && mmsImageBean.getFile1().length() > 0) {
-							//File file = new File(basepath + mmsImageBean.getFile1());
-							File file = new File(mmsImageBean.getFile1());
+							File file = new File(basepath + mmsImageBean.getFile1());
 							param.setFile1(mmsImageBean.getFile1());
 							builder.addFormDataPart("image1", mmsImageBean.getFile1(), RequestBody.create(MultipartBody.FORM,file));
 						}
 						if(mmsImageBean.getFile2() != null && mmsImageBean.getFile2().length() > 0) {
-							//File file = new File(basepath + mmsImageBean.getFile2());
-							File file = new File(mmsImageBean.getFile2());
+							File file = new File(basepath + mmsImageBean.getFile2());
 							param.setFile2(mmsImageBean.getFile2());
 							builder.addFormDataPart("image2", mmsImageBean.getFile2(), RequestBody.create(MultipartBody.FORM, file));
 						}
 						if(mmsImageBean.getFile3() != null && mmsImageBean.getFile3().length() > 0) {
-							//File file = new File(basepath + mmsImageBean.getFile3());
-							File file = new File(mmsImageBean.getFile3());
+							File file = new File(basepath + mmsImageBean.getFile3());
 							param.setFile3(mmsImageBean.getFile3());
 							builder.addFormDataPart("image3", mmsImageBean.getFile3(), RequestBody.create(MultipartBody.FORM, file));
 						}
