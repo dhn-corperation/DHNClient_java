@@ -243,7 +243,12 @@ public class ResultReq implements ApplicationListener<ContextRefreshedEvent>{
 					_ml.setSndg_cpee_dt(ent.getString("remark2")); // 단말기 수신 시각
 					
 				}else { // 일반 문자
-					_ml.setMsg_err_code(_rsltCode.get(ent.getString("code").substring(2))); // 문자 코드
+					
+					if(!ent.getString("code").equals("0000")) {
+						_ml.setMsg_err_code(_rsltCode.get(ent.getString("code").substring(2))); // 문자 코드						
+					}else {
+						_ml.setMsg_err_code(_rsltCode.get("06")); // 문자 코드						
+					}
 					_ml.setAgan_sms_type(ent.getString("sms_kind")); // 문자 타입
 					if(ent.getString("code").equals("0000")) {
 						_ml.setStatus("2");		
