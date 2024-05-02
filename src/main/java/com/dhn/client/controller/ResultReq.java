@@ -220,8 +220,9 @@ public class ResultReq implements ApplicationListener<ContextRefreshedEvent>{
 
 					if(!ent.getString("code").equals("0000")) {
 						rscode = _rsltCode.get(ent.getString("code").substring(2));
+					}else {
+						rscode = _rsltCode.get("06");
 					}
-					rscode = ent.getString("code").substring(2); // 문자 코드
 					_ml.setAgan_sms_type(ent.getString("sms_kind")); // 재발송된 문자 타입
 					
 					if(ent.getString("remark1").equalsIgnoreCase("SKT")) {// 재발송된 문자 통신사값

@@ -128,7 +128,7 @@ public class RequestImpl implements RequestDAO{
 	@Override
 	public void Insert_msg_log(Msg_Log _ml) throws Exception {
 		
-		if(_ml.getMsg_type().equals("AT") || _ml.getAgan_code().length()>1) {
+		if(_ml.getMsg_type().equals("AT") || !_ml.getAgan_code().equals("")) {
 			sqlSession.update("com.dhn.client.kakao.mapper.SendRequest.result_log_insert1", _ml);
 			sqlSession.update("com.dhn.client.kakao.mapper.SendRequest.result_log_insert2", _ml);
 			sqlSession.update("com.dhn.client.kakao.mapper.SendRequest.result_log_insert3", _ml);
