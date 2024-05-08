@@ -1,4 +1,4 @@
-# 자바 DHN_CLIENT - 주택도시보증공사
+# 자바 DHN_CLIENT - KHUG
 ## Service
 - DB2
 
