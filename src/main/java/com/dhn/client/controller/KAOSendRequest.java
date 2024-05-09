@@ -19,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.dhn.client.bean.KAORequestBean;
@@ -71,19 +73,27 @@ public class KAOSendRequest implements ApplicationListener<ContextRefreshedEvent
 		RestTemplate crt = new RestTemplate();
 		HttpEntity<String> centity = new HttpEntity<String>(cheader);
 		
-		ResponseEntity<String> cresponse = crt.exchange( dhnServer + "get_crypto",HttpMethod.GET, centity, String.class );
-		
-		if(cresponse.getStatusCode()!=HttpStatus.OK) {
-			log.info("암호화 컬럼 가져오기 오류 ");
+		try {
+			ResponseEntity<String> cresponse = crt.exchange( dhnServer + "get_crypto",HttpMethod.GET, centity, String.class );
+			
+			if(cresponse.getStatusCode()!=HttpStatus.OK) {
+				log.info("암호화 컬럼 가져오기 오류 ");
+			}
+			
+			if (param.getKakao() != null && param.getKakao().toUpperCase().equals("Y") && cresponse.getStatusCode() == HttpStatus.OK) {
+				crypto = cresponse.getBody()!=null? cresponse.getBody().toString():"";
+				log.info("KAO 초기화 완료");
+				isStart = true;
+			} else {
+				posts.postProcessBeforeDestruction(this, null);
+			}
+			
+		}catch (HttpClientErrorException e) {
+			log.error("crypto 가져오기 오류 : " + e.getStatusCode() + ", " + e.toString());
+		}catch (RestClientException e) {
+			log.error("기타 오류 : " + dhnServer + ", " + e.toString());
 		}
-		
-		if (param.getKakao() != null && param.getKakao().toUpperCase().equals("Y") && cresponse.getStatusCode() == HttpStatus.OK) {
-			crypto = cresponse.getBody()!=null? cresponse.getBody().toString():"";
-			log.info("KAO 초기화 완료");
-			isStart = true;
-		} else {
-			posts.postProcessBeforeDestruction(this, null);
-		}
+
 		
 	}
 
