@@ -11,20 +11,24 @@
 			and SNDG_DDTI is null
 			and MSG_DCD = '${msg_type}'
 			and BIZ_MSG_DCD = 'AT'
-			and GROUP_NO is null
+			and GRP_NO is null
 	</select>
 	
 	<update id="req_kao_group_update" parameterType = "com.dhn.client.bean.SQLParameter" >
 		update ${msg_table} 
 			set MSG_SNDG_STTS_CD = '1',
-				GROUP_NO = '${group_no}'
-		where MSG_SNDG_STTS_CD = '0'
-			and COALESCE(RSRT_DDTI,CURRENT TIMESTAMP) &lt;= CURRENT TIMESTAMP
-			and SNDG_DDTI is null
-			and MSG_DCD = '${msg_type}'
-			and BIZ_MSG_DCD = 'AT'
-			and GROUP_NO is null
-		fetch first 1000 rows only
+				GRP_NO = '${group_no}'
+		where DATA_ID in (
+			select DATA_ID
+				from ${msg_table}
+			where MSG_SNDG_STTS_CD = '0'
+				and COALESCE(RSRT_DDTI,CURRENT TIMESTAMP) &lt;= CURRENT TIMESTAMP
+				and SNDG_DDTI is null
+				and MSG_DCD = '${msg_type}'
+				and BIZ_MSG_DCD = 'AT'
+				and GRP_NO is null
+			fetch first 1000 rows only
+		)
 	</update>
 	
 	<resultMap id="RequestTable" type="com.dhn.client.bean.KAORequestBean">
@@ -77,7 +81,7 @@
 			COALESCE(TO_CHAR(RSRT_DDTI, 'yyyymmddhh24miss'), '00000000000000') as snd_dttm
 		from ${msg_table}
 			where MSG_SNDG_STTS_CD = '1'
-				and GROUP_NO = '${group_no}'
+				and GRP_NO = '${group_no}'
 				and MSG_DCD = '${msg_type}'
 	</select>
 	
@@ -86,17 +90,17 @@
 			set MSG_SNDG_STTS_CD = '2',
 			SNDG_DDTI = CURRENT TIMESTAMP
 		where MSG_SNDG_STTS_CD = '1' 
-			and GROUP_NO = '${group_no}'
+			and GRP_NO = '${group_no}'
 			and MSG_DCD = '${msg_type}'
 	</update>
 	
 	<update id="req_sent_init" parameterType = "com.dhn.client.bean.SQLParameter" >
 		update ${msg_table}
 			set MSG_SNDG_STTS_CD = '0',
-			GROUP_NO = NULL,
+			GRP_NO = NULL,
 			SNDG_DDTI = NULL
 		where MSG_SNDG_STTS_CD = '1'
-			and GROUP_NO = '${group_no}'
+			and GRP_NO = '${group_no}'
 			and MSG_DCD = '${msg_type}'
 	</update>
 	

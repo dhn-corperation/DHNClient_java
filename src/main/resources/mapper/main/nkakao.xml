@@ -10,19 +10,23 @@
 		   and COALESCE(RSRT_DDTI,CURRENT TIMESTAMP) &lt;= CURRENT TIMESTAMP
 		   and SNDG_DDTI is null
 		   and MSG_DCD = '${msg_type}'
-		   and GROUP_NO is NULL
+		   and GRP_NO is NULL
 	</select>
 	
 	<update id="req_sms_group_update" parameterType = "com.dhn.client.bean.SQLParameter" >
 		update ${msg_table} 
 			set MSG_SNDG_STTS_CD = '1',
-				GROUP_NO = '${group_no}'
-		where MSG_SNDG_STTS_CD = '0'
-			and COALESCE(RSRT_DDTI,CURRENT TIMESTAMP) &lt;= CURRENT TIMESTAMP
-			and SNDG_DDTI is null
-			and MSG_DCD = '${msg_type}'
-			and GROUP_NO is null
-		fetch first 1000 rows only
+				GRP_NO = '${group_no}'
+		where DATA_ID in (
+			select DATA_ID
+				from ${msg_table}
+			where MSG_SNDG_STTS_CD = '0'
+				and COALESCE(RSRT_DDTI,CURRENT TIMESTAMP) &lt;= CURRENT TIMESTAMP
+				and SNDG_DDTI is null
+				and MSG_DCD = '${msg_type}'
+				and GRP_NO is null
+			fetch first 1000 rows only
+		)
 	</update>
 	
 	<select id="req_lms_count" parameterType = "com.dhn.client.bean.SQLParameter" resultType = "int">
@@ -32,19 +36,23 @@
 		   and COALESCE(RSRT_DDTI,CURRENT TIMESTAMP) &lt;= CURRENT TIMESTAMP
 		   and SNDG_DDTI is null
 		   and MSG_DCD = '${msg_type}'
-		   and GROUP_NO is NULL
+		   and GRP_NO is NULL
 	</select>
 	
-	<update id="req_lms_group_update" parameterType = "com.dhn.client.bean.SQLParameter" >
+	<update id="req_lms_group_update" parameterType = "com.dhn.client.bean.SQLParameter" >		
 		update ${msg_table} 
 			set MSG_SNDG_STTS_CD = '1',
-				GROUP_NO = '${group_no}'
-		where MSG_SNDG_STTS_CD = '0'
-			and COALESCE(RSRT_DDTI,CURRENT TIMESTAMP) &lt;= CURRENT TIMESTAMP
-			and SNDG_DDTI is null
-			and MSG_DCD = '${msg_type}'
-			and GROUP_NO is null
-		fetch first 1000 rows only
+				GRP_NO = '${group_no}'
+		where DATA_ID in (
+			select DATA_ID
+				from ${msg_table}
+			where MSG_SNDG_STTS_CD = '0'
+				and COALESCE(RSRT_DDTI,CURRENT TIMESTAMP) &lt;= CURRENT TIMESTAMP
+				and SNDG_DDTI is null
+				and MSG_DCD = '${msg_type}'
+				and GRP_NO is null
+			fetch first 1000 rows only
+		)
 	</update>
 	
 	<select id="req_mms_count" parameterType = "com.dhn.client.bean.SQLParameter" resultType = "int">
@@ -54,21 +62,25 @@
 		   and COALESCE(RSRT_DDTI,CURRENT TIMESTAMP) &lt;= CURRENT TIMESTAMP
 		   and SNDG_DDTI is null
 		   and MSG_DCD = '${msg_type}'
-		   and GROUP_NO is NULL
-		   and mms_image_key is not null
+		   and GRP_NO is NULL
+		   and MMS_IMG_KEY is not null
 	</select>
 	
 	<update id="req_mms_group_update" parameterType = "com.dhn.client.bean.SQLParameter" >
-		update ${msg_table}
+		update ${msg_table} 
 			set MSG_SNDG_STTS_CD = '1',
-				GROUP_NO = '${group_no}'
-		 where MSG_SNDG_STTS_CD = '0'
-			and COALESCE(RSRT_DDTI,CURRENT TIMESTAMP) &lt;= CURRENT TIMESTAMP
-			and SNDG_DDTI is null
-			and MSG_DCD = '${msg_type}'
-			and GROUP_NO is null
-			and mms_image_key is not null
-		fetch first 1000 rows only
+				GRP_NO = '${group_no}'
+		where DATA_ID in (
+			select DATA_ID
+				from ${msg_table}
+			where MSG_SNDG_STTS_CD = '0'
+				and COALESCE(RSRT_DDTI,CURRENT TIMESTAMP) &lt;= CURRENT TIMESTAMP
+				and SNDG_DDTI is null
+				and MSG_DCD = '${msg_type}'
+				and GRP_NO is null
+				and MMS_IMG_KEY is not null
+			fetch first 1000 rows only
+		)
 	</update>
 	
 	<select id="req_mms_image" parameterType = "com.dhn.client.bean.SQLParameter" resultType = "com.dhn.client.bean.MMSImageBean">
@@ -80,16 +92,16 @@
 			and COALESCE(RSRT_DDTI,CURRENT TIMESTAMP) &lt;= CURRENT TIMESTAMP
 			and SNDG_DDTI is null
 			and MSG_DCD = '${msg_type}'
-			and GROUP_NO is null
+			and GRP_NO is null
 		   and CHTR_ATCH_FILE_PATH is not null
 		 group by CHTR_ATCH_FILE_PATH, CHTR_ATCH_FILE_PATH_2, CHTR_ATCH_FILE_PATH_3
 	</select>
 	
 	<update id="req_mms_key_update" parameterType = "com.dhn.client.bean.SQLParameter" >
 		update ${msg_table}
-		   set MMS_IMAGE_KEY = '${mms_key}'
+		   set MMS_IMG_KEY = '${mms_key}'
 		 where MSG_SNDG_STTS_CD = '0'
-		   and GROUP_NO is null
+		   and GRP_NO is null
 		   and MSG_DCD = '${msg_type}'
 		   and COALESCE(RSRT_DDTI,CURRENT TIMESTAMP) &lt;= CURRENT TIMESTAMP
 		   and COALESCE(CHTR_ATCH_FILE_PATH,'X') = '${file1}'
@@ -105,7 +117,7 @@
 		<result column="call_to" property="phn"/>
 		<result column="call_from" property="smssender"/>
 		<result column="pcom" property="pcom"/>
-		<result column="mms_image_key" property="pinvoice"/>
+		<result column="mms_img_key" property="pinvoice"/>
 		<result column="smskind" property="smskind"/>
 		<result column="msg_txt_title" property="smslmstit"/>
 		<result column="crypto" property="crypto"/>
@@ -128,7 +140,7 @@
 		    COALESCE(TO_CHAR(RSRT_DDTI, 'yyyymmddhh24miss'), '00000000000000') as snd_dttm
 		  from ${msg_table} 
 		 where MSG_SNDG_STTS_CD = '1'
-		   and GROUP_NO = '${group_no}'  
+		   and GRP_NO = '${group_no}'  
 		   and MSG_DCD = '${msg_type}'
 	</select>
 	
@@ -147,7 +159,7 @@
 		    COALESCE(TO_CHAR(RSRT_DDTI, 'yyyymmddhh24miss'), '00000000000000') as snd_dttm
 		  from ${msg_table} 
 		 where MSG_SNDG_STTS_CD = '1'
-		   and GROUP_NO = '${group_no}'  
+		   and GRP_NO = '${group_no}'  
 		   and MSG_DCD = '${msg_type}'
 	</select>
 	
@@ -164,12 +176,12 @@
 		    'D' as pcom,
 		    TO_CHAR(current timestamp, 'yyyy-mm-dd hh24:mi:ss') as curr_date,
 		    COALESCE(TO_CHAR(RSRT_DDTI, 'yyyymmddhh24miss'), '00000000000000') as snd_dttm,
-		    mms_image_key 
+		    MMS_IMG_KEY as mms_img_key
 		  from ${msg_table} 
 		 where MSG_SNDG_STTS_CD = '1'
-		   and GROUP_NO = '${group_no}'  
+		   and GRP_NO = '${group_no}'  
 		   and MSG_DCD = '${msg_type}'
-		   and mms_image_key is not null
+		   and MMS_IMG_KEY is not null
 	</select>
 	
 	<update id="req_sent_complete" parameterType = "com.dhn.client.bean.SQLParameter" >
@@ -178,7 +190,7 @@
 			SNDG_DDTI = CURRENT TIMESTAMP
 		where
 			MSG_SNDG_STTS_CD = '1'
-			and GROUP_NO = '${group_no}'
+			and GRP_NO = '${group_no}'
 			and MSG_DCD = '${msg_type}'
 	</update>
 
@@ -186,11 +198,11 @@
 	
 		update ${msg_table}
 			set MSG_SNDG_STTS_CD = '0',
-			GROUP_NO = NULL,
+			GRP_NO = NULL,
 			SNDG_DDTI = NULL
 		where
 			MSG_SNDG_STTS_CD = '1'
-			and GROUP_NO = '${group_no}'
+			and GRP_NO = '${group_no}'
 			and MSG_DCD = '${msg_type}'	
 	</update>
 	
