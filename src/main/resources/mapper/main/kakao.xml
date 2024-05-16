@@ -77,7 +77,9 @@
 			TO_CHAR(current timestamp, 'yyyy-mm-dd hh24:mi:ss') as curr_date,
 			BUTN_INFO as btn_1,
 			TMPL_CD_CNTS as template_cd,
-			trim(SEND_PR_PROF) as profile_key,
+			(case when trim(SEND_PR_PROF) = '46248771607c8deab1d586c6167a1bb6c709d00d' then
+				'86ba1bf964556aeafb55d9c70126b102bafd1821'
+				else trim(SEND_PR_PROF) end) as profile_key,
 			COALESCE(TO_CHAR(RSRT_DDTI, 'yyyymmddhh24miss'), '00000000000000') as snd_dttm
 		from ${msg_table}
 			where MSG_SNDG_STTS_CD = '1'
