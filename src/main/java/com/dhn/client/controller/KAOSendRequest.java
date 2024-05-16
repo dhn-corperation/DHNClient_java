@@ -128,7 +128,7 @@ public class KAOSendRequest implements ApplicationListener<ContextRefreshedEvent
 
 
 						for (KAORequestBean kaoRequestBean : _list) {
-							if (kaoRequestBean.getButton1() != null) {
+							if (kaoRequestBean.getButton1() != null && kaoRequestBean.getButton1().length()>0) {
 								kaoRequestBean = kaoService.Btn_form(kaoRequestBean);
 							}
 							kaoRequestBean = kaoService.encryption(kaoRequestBean, crypto);
