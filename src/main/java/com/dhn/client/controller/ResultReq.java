@@ -92,7 +92,7 @@ public class ResultReq implements ApplicationListener<ContextRefreshedEvent>{
 		_rsltCode.put("78","x");
 		_rsltCode.put("79","d");
 		_rsltCode.put("90","1");
-		_rsltCode.put("91","z");
+		_rsltCode.put("91","v");
 		_rsltCode.put("92","d");
 		_rsltCode.put("93","n");
 		_rsltCode.put("94","n");
