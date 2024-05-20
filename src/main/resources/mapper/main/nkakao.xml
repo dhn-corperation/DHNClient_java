@@ -133,7 +133,7 @@
 			CHTR_MSG_CNTS as sms_txt,
 			trim(RCPT_TEL) as call_to,
 			trim(TRNS_PR_TEL) as call_from,
-		    null as msg_txt_title,
+		    '' as msg_txt_title,
 		    'S' as smskind,
 		    'D' as pcom,
 		    TO_CHAR(current timestamp, 'yyyy-mm-dd hh24:mi:ss') as curr_date,
