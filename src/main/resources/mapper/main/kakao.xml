@@ -71,7 +71,7 @@
 			CHTR_MSG_TITL as msg_txt_title,
 			'D' as pcom,
 			CASE
-		        WHEN CHARACTER_LENGTH(CHTR_MSG_CNTS) >= 90 THEN 'L'
+		        WHEN CHARACTER_LENGTH(CHTR_MSG_CNTS) > 90 THEN 'L'
 		        ELSE 'S'
 		    END AS smskind,
 			TO_CHAR(current timestamp, 'yyyy-mm-dd hh24:mi:ss') as curr_date,

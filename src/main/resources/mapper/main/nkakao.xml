@@ -134,7 +134,10 @@
 			trim(RCPT_TEL) as call_to,
 			trim(TRNS_PR_TEL) as call_from,
 		    '' as msg_txt_title,
-		    'S' as smskind,
+		    CASE
+		        WHEN CHARACTER_LENGTH(CHTR_MSG_CNTS) > 90 THEN 'L'
+		        ELSE 'S'
+		    END AS smskind,
 		    'D' as pcom,
 		    TO_CHAR(current timestamp, 'yyyy-mm-dd hh24:mi:ss') as curr_date,
 		    COALESCE(TO_CHAR(RSRT_DDTI, 'yyyymmddhh24miss'), '00000000000000') as snd_dttm
