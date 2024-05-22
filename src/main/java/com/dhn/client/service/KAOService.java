@@ -83,26 +83,30 @@ public class KAOService {
 		String[] buttons = kaoRequestBean.getButton1().split("\\|");
 
 		if (buttons.length > 0) {
-			kaoRequestBean.setButton1(Btn_json(buttons[0]));
+			kaoRequestBean.setButton1(Btn_json(buttons[0],kaoRequestBean));
 		}
 		if (buttons.length > 1) {
-			kaoRequestBean.setButton2(Btn_json(buttons[1]));
+			kaoRequestBean.setButton2(Btn_json(buttons[1],kaoRequestBean));
 		}
 		if (buttons.length > 2) {
-			kaoRequestBean.setButton3(Btn_json(buttons[2]));
+			kaoRequestBean.setButton3(Btn_json(buttons[2],kaoRequestBean));
 		}
 		if (buttons.length > 3) {
-			kaoRequestBean.setButton4(Btn_json(buttons[3]));
+			kaoRequestBean.setButton4(Btn_json(buttons[3],kaoRequestBean));
 		}
 		if (buttons.length > 4) {
-			kaoRequestBean.setButton5(Btn_json(buttons[4]));
+			kaoRequestBean.setButton5(Btn_json(buttons[4],kaoRequestBean));
+		}
+		
+		if(kaoRequestBean.getSmskind().equals("S")&&kaoRequestBean.getMsgsms().length()>90) {
+			kaoRequestBean.setSmskind("L");
 		}
 
 		return kaoRequestBean;
 
 	}
 
-	private String Btn_json(String btn) {
+	private String Btn_json(String btn, KAORequestBean kaoRequestBean) {
 
 		String[] buttons = btn.split("\\^");
 
@@ -113,6 +117,8 @@ public class KAOService {
 		btnjb.setUrl_pc(buttons[3]);
 
 		String jsonString = "";
+		
+		kaoRequestBean.addUrlToMsgsms(buttons[3]);
 
 		ObjectMapper mapper = new ObjectMapper();
 		try {

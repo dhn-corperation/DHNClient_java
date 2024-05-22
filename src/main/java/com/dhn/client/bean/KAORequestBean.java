@@ -43,5 +43,11 @@ public class KAORequestBean {
 	private String att_items;
 	private String att_coupon;
 	private String crypto;
+	
+	public void addUrlToMsgsms(String url) {
+		if(url != null && !url.isEmpty()) {
+			this.msgsms = (this.msgsms == null? "" : this.msgsms + "\n") + url;
+		}
+	}
 	  
 }
