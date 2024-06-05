@@ -200,7 +200,7 @@ public class ResultReq implements ApplicationListener<ContextRefreshedEvent>{
 			String rscode = "";
 			
 			_ml.setMsg_type(ent.getString("message_type").toUpperCase());
-			
+
 			if(ent.getString("message_type").equalsIgnoreCase("AT")) { // message_type = AT 즉, 1차 알림톡 성공
 				
 				//_ml.setMsg_err_code(ent.getString("code")); // 알림톡 코드
